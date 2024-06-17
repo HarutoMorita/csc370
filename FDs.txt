@@ -1,0 +1,29 @@
+restaurants(id, name, vegan, phone_num, address) 
+id->{name, vegan, phone_num, address}, {name, phone_num}->{id, vegan, address}
+{phone_num, address}->{id, name, vegan}, {name, address}->{id, vegan, phone_num}
+superkey: id, {name, phone_num}, {phone_num, address}, {name, address}
+key:id
+
+delivery(id, UberEats, SkipTheDishes, DoorDash)
+id->{UberEATS, SkipTheDishes, DoorDash}
+key:id
+
+hours(id, day, open, close, mid_close, mid_open)
+{id, day}->{open, close, mid_close, mid_open}
+key:{id,day}
+
+links(name, link)
+name->link
+key:name
+
+locations(address, city, postal_code)
+address->{city, postal_code}
+key:address
+
+ratings(id, rating, user_id)
+{id, user_id}->rating
+key:{id,user_id}
+
+users(id, name)
+id->name
+key:id
