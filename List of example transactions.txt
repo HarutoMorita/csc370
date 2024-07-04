@@ -1,0 +1,147 @@
+Add a new rating for the restaurant with the id 4 from user with the id 2
+mysql> begin;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from ratings where user_id = 2;
++------+--------+---------+
+| id   | rating | user_id |
++------+--------+---------+
+|    2 |    4.0 |       2 |
+|    1 |    4.0 |       2 |
+|    3 |    3.0 |       2 |
++------+--------+---------+
+3 rows in set (0.00 sec)
+
+mysql> insert into ratings value(4,4.0,2);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from ratings where user_id = 2;
++------+--------+---------+
+| id   | rating | user_id |
++------+--------+---------+
+|    2 |    4.0 |       2 |
+|    1 |    4.0 |       2 |
+|    3 |    3.0 |       2 |
+|    4 |    4.0 |       2 |
++------+--------+---------+
+4 rows in set (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.03 sec)
+
+Add the information of new restaurant 'Sushi Mago' 
+mysql> begin;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into restaurants value(9,'Sushi Mago', 1, '2505902841', '4071 Shelbourne St #1');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into locations value('4071 Shelbourne St #1', 'Victoria', 'V8N 5Y1');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into delivery value(9,0, 1, 1);//Unavailable for UberEATS, available for DoorDash and SkipTheDishes
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(9,'Mon',NULL,NULL,NULL,NULL);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(9,'Tue','11:30:00','07:30:00', '02:30:00', '04:30:00');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(9,'Wed','11:30:00','07:45:00', '02:30:00', '04:30:00');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(9,'Thu','11:30:00','07:45:00', '02:30:00', '04:30:00');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(9,'Fri','11:30:00','08:00:00', '02:30:00', '04:30:00');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(9,'Sat','11:30:00','08:00:00', '02:30:00', '04:30:00');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(9,'Sun','11:30:00','08:00:00', '02:30:00', '04:30:00');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into links value('Sushi Mago','https://sushimago.ca/');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from restaurants;
++----+---------------------------------+--------------+------------+-----------------------+
+| id | name                            | vegan        | phone_num  | address               |
++----+---------------------------------+--------------+------------+-----------------------+
+|  1 | Yoshi Sushi Japanese Restaurant | 0x01         | 2504753900 | 771 Vernon Ave        |
+|  2 | Chiba Sushi Japanese Restaurant | 0x01         | 2503839886 | 2630 Quadra St        |
+|  3 | OOTA_YA                         | 0x01         | 7786767350 | 1701 Douglas St       |
+|  4 | Erito Sushi                     | 0x01         | 7784333328 | 3531 Uptown Blvd      |
+|  5 | Sen Zushi                       | 0x01         | 2503854320 | 940 Fort St           |
+|  6 | Sushi Field                     | 0x01         | 7784322205 | 1594 Fairfield Rd     |
+|  7 | Sushi Field                     | 0x01         | 2503845566 | #111 1505 Admirals Rd |
+|  8 | Shiki Sushi                     | 0x01         | 2503818622 | 1113 Blanshard St     |
+|  9 | Sushi Mago                      | 0x01         | 2505902841 | 4071 Shelbourne St #1 |
++----+---------------------------------+--------------+------------+-----------------------+
+9 rows in set (0.00 sec)
+
+mysql> select * from locations;
++-----------------------+----------+-------------+
+| address               | city     | postal_code |
++-----------------------+----------+-------------+
+| 771 Vernon Ave        | Victoria | V8X 5A7     |
+| 2630 Quadra St        | Victoria | V8T 4E4     |
+| 1701 Douglas St       | Victoria | V8W 0C1     |
+| 3531 Uptown Blvd      | Victoria | V9B 5E3     |
+| 940 Fort St           | Victoria | V8V 3K2     |
+| 1594 Fairfield Rd     | Victoria | V8S 1G1     |
+| #111 1505 Admirals Rd | Victoria | V9A 2P8     |
+| 1113 Blanshard St     | Victoria | V8W 2H7     |
+| 4071 Shelbourne St #1 | Victoria | V8N 5Y1     |
++-----------------------+----------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> select * from links;
++---------------------------------+------------------------------------------+
+| name                            | link                                     |
++---------------------------------+------------------------------------------+
+| Yoshi Sushi Japanese Restaurant | https://www.yoshisushi.ca/               |
+| Chiba Sushi Japanese Restaurant | https://www.chibasushirestaurant.com/    |
+| OOTA_YA                         | https://canada.ootaya.info/              |
+| Erito Sushi                     | https://shopuptown.ca/store/erito-sushi/ |
+| Sen Zushi                       | https://senzushi.com/                    |
+| Sushi Field                     | https://sushifield.com/                  |
+| Shiki Sushi                     | https://shikisushivictoria.ca/           |
+| Sushi Mago                      | https://sushimago.ca/                    |
++---------------------------------+------------------------------------------+
+8 rows in set (0.00 sec)
+
+mysql> select * from delivery;
++----+--------------------+------------------------------+--------------------+
+| id | UberEats           | SkipTheDishes                | DoorDash           |
++----+--------------------+------------------------------+--------------------+
+|  1 | 0x00               | 0x01                         | 0x01               |
+|  2 | 0x01               | 0x00                         | 0x01               |
+|  3 | 0x01               | 0x00                         | 0x01               |
+|  4 | 0x01               | 0x00                         | 0x01               |
+|  5 | 0x00               | 0x00                         | 0x00               |
+|  6 | 0x01               | 0x01                         | 0x01               |
+|  7 | 0x01               | 0x01                         | 0x01               |
+|  8 | 0x01               | 0x01                         | 0x01               |
+|  9 | 0x00               | 0x01                         | 0x01               |
++----+--------------------+------------------------------+--------------------+
+9 rows in set (0.00 sec)
+
+mysql> select * from hours where id = 9;
++------+------+----------+----------+-----------+----------+
+| id   | day  | open     | close    | mid_close | mid_open |
++------+------+----------+----------+-----------+----------+
+|    9 | Mon  | NULL     | NULL     | NULL      | NULL     |
+|    9 | Tue  | 11:30:00 | 07:30:00 | 02:30:00  | 04:30:00 |
+|    9 | Wed  | 11:30:00 | 07:45:00 | 02:30:00  | 04:30:00 |
+|    9 | Thu  | 11:30:00 | 07:45:00 | 02:30:00  | 04:30:00 |
+|    9 | Fri  | 11:30:00 | 08:00:00 | 02:30:00  | 04:30:00 |
+|    9 | Sat  | 11:30:00 | 08:00:00 | 02:30:00  | 04:30:00 |
+|    9 | Sun  | 11:30:00 | 08:00:00 | 02:30:00  | 04:30:00 |
++------+------+----------+----------+-----------+----------+
+7 rows in set (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.01 sec)
