@@ -1,0 +1,76 @@
+List of restaurants that is available on UberEats
+mysql> create view UberAvailable as select id from delivery where UberEats =1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select name, address from restaurants join UberAvailable on restaurants.id = UberAvailable.id;
++---------------------------------+-----------------------+
+| name                            | address               |
++---------------------------------+-----------------------+
+| Chiba Sushi Japanese Restaurant | 2630 Quadra St        |
+| OOTA_YA                         | 1701 Douglas St       |
+| Erito Sushi                     | 3531 Uptown Blvd      |
+| Sushi Field                     | 1594 Fairfield Rd     |
+| Sushi Field                     | #111 1505 Admirals Rd |
+| Shiki Sushi                     | 1113 Blanshard St     |
++---------------------------------+-----------------------+
+6 rows in set (0.00 sec)
+
+Average rating given to restaurants from each user
+mysql> create view AvgRatingFromUser as select user_id, avg(rating) as rating from ratings group by user_id;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select name, rating from users inner join AvgRatingFromUser on users.id = AvgRatingFromUser.user_id;
++-------+---------+
+| name  | rating  |
++-------+---------+
+| Harry | 4.00000 |
+| Amy   | 3.66667 |
+| Sam   | 4.33333 |
+| Seth  | 2.60000 |
+| Alex  | 2.60000 |
+| Emma  | 3.60000 |
+| Jason | 3.80000 |
+| Elly  | 3.60000 |
++-------+---------+
+8 rows in set (0.00 sec)
+
+List of restaurants and their business hours that are open on Monday and Wednesday
+mysql> create view OpenMonAndWed as select * from hours where open is not NULL and day in ('Mon', 'Wed');
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select name, day, open, close from restaurants inner join OpenMonAndWed on OpenMonAndWed.id = restaurants.id;
++---------------------------------+------+----------+----------+
+| name                            | day  | open     | close    |
++---------------------------------+------+----------+----------+
+| Yoshi Sushi Japanese Restaurant | Wed  | 12:00:00 | 08:30:00 |
+| Chiba Sushi Japanese Restaurant | Mon  | 04:30:00 | 09:00:00 |
+| Chiba Sushi Japanese Restaurant | Wed  | 11:30:00 | 09:00:00 |
+| OOTA_YA                         | Wed  | 11:30:00 | 02:00:00 |
+| Erito Sushi                     | Mon  | 11:00:00 | 07:00:00 |
+| Erito Sushi                     | Wed  | 11:00:00 | 07:00:00 |
+| Sen Zushi                       | Mon  | 11:30:00 | 08:30:00 |
+| Sen Zushi                       | Wed  | 11:30:00 | 08:30:00 |
+| Sushi Field                     | Mon  | 11:30:00 | 09:00:00 |
+| Sushi Field                     | Wed  | 11:30:00 | 09:00:00 |
+| Sushi Field                     | Mon  | 11:30:00 | 09:00:00 |
+| Sushi Field                     | Wed  | 11:30:00 | 09:00:00 |
+| Shiki Sushi                     | Mon  | 11:00:00 | 09:00:00 |
+| Shiki Sushi                     | Wed  | 11:00:00 | 09:00:00 |
++---------------------------------+------+----------+----------+
+14 rows in set (0.00 sec)
+
+Rating of restaurants
+mysql> create view AvgRatingForRestaurant as select id, avg(rating) as rating from ratings group by id;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select name, rating from restaurants inner join AvgRatingForRestaurant on AvgRatingForRestaurant.id = restaurants.id order by rating desc;
++---------------------------------+---------+
+| name                            | rating  |
++---------------------------------+---------+
+| Sen Zushi                       | 3.80000 |
+| Yoshi Sushi Japanese Restaurant | 3.75000 |
+| OOTA_YA                         | 3.50000 |
+| Erito Sushi                     | 3.20000 |
+| Chiba Sushi Japanese Restaurant | 3.00000 |
++---------------------------------+---------+
+5 rows in set (0.00 sec)
