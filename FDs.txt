@@ -1,29 +1,37 @@
-restaurants(id, name, vegan, phone_num, address) 
-id->{name, vegan, phone_num, address}, {name, phone_num}->{id, vegan, address}
-{phone_num, address}->{id, name, vegan}, {name, address}->{id, vegan, phone_num}
-superkey: id, {name, phone_num}, {phone_num, address}, {name, address}
+restaurants(id, name, url) 
+id->{name, url}, {name, url}->id, 
 key:id
+-BCNF
 
 delivery(id, UberEats, SkipTheDishes, DoorDash)
 id->{UberEATS, SkipTheDishes, DoorDash}
 key:id
+-BCNF
+-No MVD
 
 hours(id, day, open, close, mid_close, mid_open)
 {id, day}->{open, close, mid_close, mid_open}
 key:{id,day}
+-BCNF
+-No MVD
 
-links(name, link)
-name->link
-key:name
-
-locations(address, city, postal_code)
-address->{city, postal_code}
-key:address
+locations(id, address, city, postal_code, phone_num)
+id->{address, city, postal_code, phone_num}
+{address,city}->{id, postal_code, phone_num}
+{address,postal_code}->{id, city, phone_num}
+key:id
+-BCNF
+-No MVD
 
 ratings(id, rating, user_id)
 {id, user_id}->rating
 key:{id,user_id}
+prime:id,user_id
+-BCNF
+-No MVD
 
 users(id, name)
 id->name
 key:id
+-BCNF
+-No MVD
