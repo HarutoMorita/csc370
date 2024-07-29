@@ -1,0 +1,144 @@
+mysql> set transaction isolation level serializable;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select count(*) into @numRestaurants from restaurants;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select 'Ohana Sushi' into @name;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select '7784061556' into @phone;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select '513 Fisgard St' into @address;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @numRestaurants + 1 into @id;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into restaurants values(@id,@name,1,@phone,@address);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from restaurants;
++----+---------------------------------+--------------+------------+-----------------------+
+| id | name                            | vegan        | phone_num  | address               |
++----+---------------------------------+--------------+------------+-----------------------+
+|  1 | Yoshi Sushi Japanese Restaurant | 0x01         | 2504753900 | 771 Vernon Ave        |
+|  2 | Chiba Sushi Japanese Restaurant | 0x01         | 2503839886 | 2630 Quadra St        |
+|  3 | OOTA_YA                         | 0x01         | 7786767350 | 1701 Douglas St       |
+|  4 | Erito Sushi                     | 0x01         | 7784333328 | 3531 Uptown Blvd      |
+|  5 | Sen Zushi                       | 0x01         | 2503854320 | 940 Fort St           |
+|  6 | Sushi Field                     | 0x01         | 7784322205 | 1594 Fairfield Rd     |
+|  7 | Sushi Field                     | 0x01         | 2503845566 | #111 1505 Admirals Rd |
+|  8 | Shiki Sushi                     | 0x01         | 2503818622 | 1113 Blanshard St     |
+|  9 | Sushi Mago                      | 0x01         | 2505902841 | 4071 Shelbourne St #1 |
+| 10 | Ohana Sushi                     | 0x01         | 7784061556 | 513 Fisgard St        |
++----+---------------------------------+--------------+------------+-----------------------+
+10 rows in set (0.00 sec)
+
+mysql> commit;
+
+
+mysql> drop procedure if exists nextday;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter //
+
+mysql> create procedure nextday(cur char(3), out next char(3))
+    -> begin
+    -> if cur = 'Mon' then set next = 'Tue';
+    -> elseif cur = 'Tue' then set next = 'Wed';
+    -> elseif cur = 'Wed' then set next = 'Thu';
+    -> elseif cur = 'Thu' then set next = 'Fri';
+    -> elseif cur = 'Fri' then set next = 'Sat';
+    -> elseif cur = 'Sat' then set next = 'Sun';
+    -> elseif cur = 'Sun' then set next = 'Mon';
+    -> else set next = null;
+    -> end if;
+    -> end//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create procedure dayscheck
+    -> (id int)
+    -> begin
+    -> select count(*) into @mon from hours where hours.id = id and hours.day = 'Mon';
+    -> select count(*) into @tue from hours where hours.id = id and hours.day = 'Tue';
+    -> select count(*) into @wed from hours where hours.id = id and hours.day = 'Wed';
+    -> select count(*) into @thu from hours where hours.id = id and hours.day = 'Thu';
+    -> select count(*) into @fri from hours where hours.id = id and hours.day = 'Fri';
+    -> select count(*) into @sat from hours where hours.id = id and hours.day = 'Sat';
+    -> select count(*) into @sun from hours where hours.id = id and hours.day = 'Sun';
+    -> if @mon = 1 and @tue = 1 and @wed = 1 and @thu = 1 and @fri = 1 and @sat = 1 and @sun = 1 then
+    ->     commit;
+    -> else
+    ->     rollback;
+    -> end if;
+    -> end//
+
+mysql> delimiter ;
+
+mysql> set transaction isolation level serializable
+    -> ;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>  start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select max(id) from hours into @id;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @id + 1 into @id;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select '11:30:00' into @open;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select '08:45:00' into @close;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select 'Mon' into @day;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(@id,@day,@open,@close,null,null);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> call nextday(@day,@day);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(@id,@day,@open,@close,null,null);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> call nextday(@day,@day);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(@id,@day,@open,@close,null,null);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> call nextday(@day,@day);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(@id,@day,@open,@close,null,null);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> call nextday(@day,@day);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(@id,@day,@open,@close,null,null);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> call nextday(@day,@day);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(@id,@day,@open,@close,null,null);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> call nextday(@day,@day);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into hours value(@id,@day,@open,@close,null,null);
+Query OK, 1 row affected (0.00 sec)
+
+call dayscheck(@id);
